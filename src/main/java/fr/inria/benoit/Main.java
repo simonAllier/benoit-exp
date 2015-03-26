@@ -1,0 +1,77 @@
+package fr.inria.benoit;
+
+
+import fr.inria.benoit.util.GitUtils;
+import fr.inria.benoit.util.Log;
+import org.eclipse.jgit.api.errors.GitAPIException;
+
+import java.io.*;
+import java.util.Random;
+
+/**
+ * Main program
+ */
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+
+        if(args.length != 0) {
+            try {
+                initNbOfProcess();
+                initGit();
+            } catch (Exception e) {
+                Log.error("Main ", e);
+            }
+        }
+        else {
+            runExp();
+        }
+    }
+
+    protected static void runExp() throws IOException, InterruptedException, GitAPIException {
+        while (true) {
+            String param = initParameter();
+            Process p = Runtime.getRuntime().exec("sh bin/run_simus.sh /opt/mcr/v80/ " + param);
+            p.waitFor();
+        }
+
+    }
+
+    protected static void initGit() throws IOException, GitAPIException {
+        Log.info("clone the repository https://github.com/simonAllier/benoit-exp.git");
+        GitUtils gitUtils = new GitUtils("repo");
+
+        gitUtils.cloneRepo();
+    }
+
+    protected static String initParameter() throws InterruptedException, IOException, GitAPIException {
+        GitUtils gitUtils = new GitUtils("repo");
+
+        Random r = new Random();
+        int sleep = r.nextInt(600);
+        Log.info("sleep {} seconds", sleep);
+        Thread.sleep(sleep * 1000);
+
+        return gitUtils.getFirstPropertyFile();
+    }
+
+
+    protected static void initNbOfProcess() throws InterruptedException, IOException {
+        Runtime r = Runtime.getRuntime();
+
+        Process p = r.exec("cat /proc/cpuinfo");
+        p.waitFor();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        String line;
+        int i = 0;
+        while ((line = reader.readLine()) != null) {
+            if(line.startsWith("processor"))
+                i++;
+        }
+        reader.close();
+        BufferedWriter out = new BufferedWriter(new FileWriter("nbProcess"));
+        out.write(Math.max(1, i / 4)+"");
+        out.close();
+    }
+
+}
