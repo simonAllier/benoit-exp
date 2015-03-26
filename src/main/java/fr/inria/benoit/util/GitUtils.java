@@ -13,7 +13,7 @@ import java.io.*;
  * Created by Simon on 29/08/14.
  */
 public class GitUtils {
-    protected String remotePath = "https://github.com/simonAllier/benoit-exp.git";
+    protected String remotePath = "https://github.com/simonAllier/benoit-exp-result.git";
     protected String localPath;
     protected Repository localRepository;
     protected Git git;
@@ -56,9 +56,9 @@ public class GitUtils {
         BufferedReader br = new BufferedReader(new FileReader(localPath + "/exp"));
         StringBuilder sb = new StringBuilder();
         String line = br.readLine();
-        String ret = "";
+        String ret = null;
         while (line != null) {
-            if(line.split(" ").length == 1 && ret.equals("")) {
+            if(!line.endsWith("OK") && ret == null) {
                 ret = line;
                 sb.append(line+" OK\n");
             }

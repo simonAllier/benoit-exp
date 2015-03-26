@@ -18,7 +18,7 @@ public class Main {
         if(args.length != 0) {
             try {
                 initNbOfProcess();
-//                initGit();
+                initGit();
             } catch (Exception e) {
                 Log.error("Main ", e);
             }
@@ -33,7 +33,7 @@ public class Main {
             String param = initParameter();
             Process p = Runtime.getRuntime().exec("sh bin/run_simus.sh /opt/mcr/v80/ " + param);
             p.waitFor();
-            GitUtils gitUtils = new GitUtils("");
+            GitUtils gitUtils = new GitUtils("results");
             gitUtils.pull();
             gitUtils.add("results/biom_" + param.replace(" ", "_") + ".txt");
             gitUtils.add("results/ramets_" + param.replace(" ","_")+ ".txt");
@@ -44,17 +44,17 @@ public class Main {
     }
 
     protected static void initGit() throws IOException, GitAPIException {
-        Log.info("clone the repository https://github.com/simonAllier/benoit-exp.git");
-        GitUtils gitUtils = new GitUtils("");
+        Log.info("clone the repository https://github.com/simonAllier/benoit-exp-result.git");
+        GitUtils gitUtils = new GitUtils("results");
 
         gitUtils.cloneRepo();
     }
 
     protected static String initParameter() throws InterruptedException, IOException, GitAPIException {
-        GitUtils gitUtils = new GitUtils("");
+        GitUtils gitUtils = new GitUtils("results");
 
         Random r = new Random();
-        int sleep = r.nextInt(600);
+        int sleep = r.nextInt(100);
         Log.info("sleep {} seconds", sleep);
         Thread.sleep(sleep * 1000);
 
