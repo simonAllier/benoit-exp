@@ -31,12 +31,15 @@ public class Main {
     protected static void runExp() throws IOException, InterruptedException, GitAPIException {
         while (true) {
             String param = initParameter();
+            Log.info("run: {}", "sh bin/run_simus.sh /opt/mcr/v80/ " + param);
             Process p = Runtime.getRuntime().exec("sh bin/run_simus.sh /opt/mcr/v80/ " + param);
             p.waitFor();
-            GitUtils gitUtils = new GitUtils("results");
+            GitUtils gitUtils = new GitUtils("exp");
             gitUtils.pull();
-            gitUtils.add("results/biom_" + param.replace(" ", "_") + ".txt");
-            gitUtils.add("results/ramets_" + param.replace(" ","_")+ ".txt");
+            String[] split = param.split(" ");
+            String pp = split[0] + "_" + split[1] + "_" + split[2] + "_" + split[3];
+            gitUtils.add("results/biom_" + pp + ".txt");
+            gitUtils.add("results/ramets_" + pp + ".txt");
             gitUtils.commit("update");
             gitUtils.push();
         }
@@ -45,13 +48,18 @@ public class Main {
 
     protected static void initGit() throws IOException, GitAPIException {
         Log.info("clone the repository https://github.com/simonAllier/benoit-exp-result.git");
-        GitUtils gitUtils = new GitUtils("results");
+        GitUtils gitUtils = new GitUtils("exp");
 
         gitUtils.cloneRepo();
+
+        File file = new File("exp/results");
+        if(!file.exists()) {
+            file.mkdirs();
+        }
     }
 
     protected static String initParameter() throws InterruptedException, IOException, GitAPIException {
-        GitUtils gitUtils = new GitUtils("results");
+        GitUtils gitUtils = new GitUtils("exp");
 
         Random r = new Random();
         int sleep = r.nextInt(100);
@@ -76,7 +84,7 @@ public class Main {
         }
         reader.close();
         BufferedWriter out = new BufferedWriter(new FileWriter("nbProcess"));
-        out.write(Math.max(1, i / 4)+"");
+        out.write(i+"");
         out.close();
     }
 
