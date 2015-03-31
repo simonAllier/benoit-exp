@@ -38,6 +38,8 @@ public class Main {
             gitUtils.pull();
             String[] split = param.split(" ");
             String pp = split[0] + "_" + split[1] + "_" + split[2] + "_" + split[3];
+            Log.info("results/biom_" + pp + ".txt");
+            Log.info("results/ramets_" + pp + ".txt");
             gitUtils.add("results/biom_" + pp + ".txt");
             gitUtils.add("results/ramets_" + pp + ".txt");
             gitUtils.commit("update");
