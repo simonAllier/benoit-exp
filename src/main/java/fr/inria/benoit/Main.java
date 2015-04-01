@@ -3,6 +3,7 @@ package fr.inria.benoit;
 
 import fr.inria.benoit.util.GitUtils;
 import fr.inria.benoit.util.Log;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.*;
@@ -30,20 +31,23 @@ public class Main {
 
     protected static void runExp() throws IOException, InterruptedException, GitAPIException {
         while (true) {
-            String param = initParameter();
-            Log.info("run: {}", "sh bin/run_simus.sh /opt/mcr/v80/ " + param);
-            Process p = Runtime.getRuntime().exec("sh bin/run_simus.sh /opt/mcr/v80/ " + param);
-            p.waitFor();
-            GitUtils gitUtils = new GitUtils("exp");
-            gitUtils.pull();
-            String[] split = param.split(" ");
-            String pp = split[1] + "_" + split[2] + "_" + split[3] + "_" + split[4];
-            Log.info("results/biom_" + pp + ".txt");
-            Log.info("results/ramets_" + pp + ".txt");
-            gitUtils.add("results/biom_" + pp + ".txt");
-            gitUtils.add("results/ramets_" + pp + ".txt");
-            gitUtils.commit("update");
-            gitUtils.push();
+            try {
+                String param = initParameter();
+                Log.info("run: {}", "sh bin/run_simus.sh /opt/mcr/v80/ " + param);
+
+                Process p = Runtime.getRuntime().exec("sh bin/run_simus.sh /opt/mcr/v80/ " + param);
+                p.waitFor();
+                GitUtils gitUtils = new GitUtils("exp");
+                gitUtils.pull();
+                String[] split = param.split(" ");
+                String pp = split[1] + "_" + split[2] + "_" + split[3] + "_" + split[4];
+                Log.info("results/biom_" + pp + ".txt");
+                Log.info("results/ramets_" + pp + ".txt");
+                gitUtils.add("results/biom_" + pp + ".txt");
+                gitUtils.add("results/ramets_" + pp + ".txt");
+                gitUtils.commit("update");
+                gitUtils.push();
+            } catch (Throwable e) {}
         }
 
     }
