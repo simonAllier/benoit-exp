@@ -67,7 +67,7 @@ public class Main {
         int sleep = r.nextInt(100);
         Log.info("sleep {} seconds", sleep);
         Thread.sleep(sleep * 1000);
-
+        gitUtils.pull();
         return gitUtils.getFirstPropertyFile();
     }
 

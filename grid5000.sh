@@ -10,7 +10,7 @@ java -Dhttp.proxyHost=proxy.rennes.grid5000.fr -Dhttps.proxyPort=3128 -Dhttps.pr
 
 
 cpu=$(cat nbProcess)
-for i in `seq 1 $1`
+for i in `seq 1 100000`
 do
     for j in `seq 1 $cpu`
     do
