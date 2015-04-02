@@ -8,6 +8,8 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Simon on 29/08/14.
@@ -53,17 +55,20 @@ public class GitUtils {
     }
 
     public String getFirstPropertyFile() throws IOException, GitAPIException {
+        Set<String> done = new HashSet<>();
         BufferedReader br = new BufferedReader(new FileReader(localPath + "/exp"));
         StringBuilder sb = new StringBuilder();
         String line = br.readLine();
         String ret = null;
         while (line != null) {
-            if(!line.endsWith("OK") && ret == null) {
+            if(ret == null && !line.endsWith("OK") && !done.contains(line+" OK")) {
                 ret = line;
                 sb.append(line+" OK\n");
             }
-            else
-                sb.append(line+"\n");
+            else {
+                done.add(line);
+                sb.append(line + "\n");
+            }
             line = br.readLine();
         }
         Log.info("properties file: {}",ret);
@@ -77,6 +82,7 @@ public class GitUtils {
 
     private void updateExpList(String s) throws IOException, GitAPIException {
         BufferedWriter out = new BufferedWriter(new FileWriter(localPath + "/exp"));
+        pull();
         out.write(s);
         out.close();
         add("exp");

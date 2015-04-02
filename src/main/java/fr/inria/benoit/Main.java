@@ -3,7 +3,6 @@ package fr.inria.benoit;
 
 import fr.inria.benoit.util.GitUtils;
 import fr.inria.benoit.util.Log;
-import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.*;
