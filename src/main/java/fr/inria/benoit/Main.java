@@ -38,12 +38,10 @@ public class Main {
                 p.waitFor();
                 GitUtils gitUtils = new GitUtils("exp");
                 gitUtils.pull();
-                String[] split = param.split(" ");
+                    String[] split = param.split(" ");
                 String pp = split[1] + "_" + split[2] + "_" + split[3] + "_" + split[4];
-                Log.info("results/biom_" + pp + ".txt");
-                Log.info("results/ramets_" + pp + ".txt");
-                gitUtils.add("results/biom_" + pp + ".txt");
-                gitUtils.add("results/ramets_" + pp + ".txt");
+                Log.info("push result");
+                gitUtils.add("results");
                 gitUtils.commit("update");
                 gitUtils.push();
             } catch (Throwable e) {}
@@ -67,7 +65,7 @@ public class Main {
         GitUtils gitUtils = new GitUtils("exp");
 
         Random r = new Random();
-        int sleep = r.nextInt(100);
+        int sleep = r.nextInt(300);
         Log.info("sleep {} seconds", sleep);
         Thread.sleep(sleep * 1000);
         gitUtils.pull();
