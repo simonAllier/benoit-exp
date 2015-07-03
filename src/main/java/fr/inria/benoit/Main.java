@@ -4,6 +4,7 @@ package fr.inria.benoit;
 import fr.inria.benoit.util.GitUtils;
 import fr.inria.benoit.util.Log;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import java.util.*;
 
 import java.io.*;
 import java.util.Random;
@@ -31,19 +32,21 @@ public class Main {
     protected static void runExp() throws IOException, InterruptedException, GitAPIException {
         while (true) {
             try {
-                String param = initParameter();
-                Log.info("run: {}", "sh bin/run_simus.sh /opt/mcr/v80/ " + param);
-
-                Process p = Runtime.getRuntime().exec("sh bin/run_simus.sh /opt/mcr/v80/ " + param);
-                p.waitFor();
+                List<String> params = initParameter();
+                
+                for(String param : params) {
+                    Log.info("run: {}", "sh bin/run_simus.sh /opt/mcr/v80/ " + param);
+                    Process p = Runtime.getRuntime().exec("sh bin/run_simus.sh /opt/mcr/v80/ " + param);
+                    p.waitFor();
+                }
+                
                 GitUtils gitUtils = new GitUtils("exp");
                 gitUtils.pull();
-                    String[] split = param.split(" ");
-                String pp = split[1] + "_" + split[2] + "_" + split[3] + "_" + split[4];
                 Log.info("push result");
                 gitUtils.add("results");
                 gitUtils.commit("update");
                 gitUtils.push();
+                
             } catch (Throwable e) {}
         }
 
@@ -61,7 +64,7 @@ public class Main {
         }
     }
 
-    protected static String initParameter() throws InterruptedException, IOException, GitAPIException {
+    protected static List<String> initParameter() throws InterruptedException, IOException, GitAPIException {
         GitUtils gitUtils = new GitUtils("exp");
 
         Random r = new Random();
@@ -69,7 +72,7 @@ public class Main {
         Log.info("sleep {} seconds", sleep);
         Thread.sleep(sleep * 1000);
         gitUtils.pull();
-        return gitUtils.getFirstPropertyFile();
+        return gitUtils.getPropertiesFiles(100);
     }
 
 
