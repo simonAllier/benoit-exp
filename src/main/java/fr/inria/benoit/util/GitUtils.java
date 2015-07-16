@@ -85,10 +85,10 @@ public class GitUtils {
         
         List<String> ret = new ArrayList<>(nb);
         int count = 0;
-        while (line != null && count < nb) {
-            if(!line.endsWith("OK")) {
+        while (line != null) {
+            if(!line.endsWith("OK")  && count < nb) {
                 ret.add(line);
-                sb.append(line+" OK\n");
+                sb.append(line + " OK\n");
                 count++;
             }
             else {

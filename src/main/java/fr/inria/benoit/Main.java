@@ -68,7 +68,7 @@ public class Main {
         GitUtils gitUtils = new GitUtils("exp");
 
         Random r = new Random();
-        int sleep = r.nextInt(30);
+        int sleep = r.nextInt(300);
         Log.info("sleep {} seconds", sleep);
         Thread.sleep(sleep * 1000);
         gitUtils.pull();
