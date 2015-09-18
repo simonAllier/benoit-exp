@@ -72,7 +72,7 @@ public class Main {
         Log.info("sleep {} seconds", sleep);
         Thread.sleep(sleep * 1000);
         gitUtils.pull();
-        return gitUtils.getPropertiesFiles(100);
+        return gitUtils.getPropertiesFiles(10);
     }
 
 
