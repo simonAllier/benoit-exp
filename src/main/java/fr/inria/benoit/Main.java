@@ -79,6 +79,7 @@ public class Main {
     protected List<String> initParameter() throws InterruptedException, IOException, GitAPIException {
         GitUtils gitUtils = new GitUtils("exp");
 
+        gitUtils.pull();
         Random r = new Random();
         int sleep = r.nextInt(300);
         Log.info("sleep {} seconds", sleep);
@@ -102,6 +103,7 @@ public class Main {
         if(nbProcessor == 0) {
             nbProcessor = 1;
         }
+        Log.info("nb of processor: {}", nbProcessor);
         reader.close();
 
     }
