@@ -39,27 +39,24 @@ public class Main {
                         try {
                             Process p = Runtime.getRuntime().exec("sh bin/run_simus.sh /opt/mcr/v80/ " + param);
                             p.waitFor();
-
-                            GitUtils gitUtils = new GitUtils("exp");
-                            gitUtils.pull();
-                            Log.info("push result");
-                            gitUtils.add("results");
-                            gitUtils.commit("update");
-                            gitUtils.push();
                         } catch (InterruptedException e ) {
                             e.printStackTrace();
                         } catch (IOException e) {
                             e.printStackTrace();
-                        } catch (GitAPIException e) {
-                            e.printStackTrace();
                         }
                     }
-                };
 
+                };
                 executor.execute(runnable);
             }
             executor.shutdown();
             while (!executor.isTerminated()) {   }
+            GitUtils gitUtils = new GitUtils("exp");
+            gitUtils.pull();
+            Log.info("push result");
+            gitUtils.add("results");
+            gitUtils.commit("update");
+            gitUtils.push();
         }
 
     }
@@ -85,7 +82,7 @@ public class Main {
         Log.info("sleep {} seconds", sleep);
         Thread.sleep(sleep * 1000);
         gitUtils.pull();
-        return gitUtils.getPropertiesFiles(10*nbProcessor);
+        return gitUtils.getPropertiesFiles(5*nbProcessor);
     }
 
 
